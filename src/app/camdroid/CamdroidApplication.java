@@ -69,11 +69,11 @@ public class CamdroidApplication extends android.app.Application {
 
 		notificationEnabled = settings.getBoolean("notification_enabled", true);
 		
-		SessionBuilder.getInstance() 
+		/*SessionBuilder.getInstance() 
 		.setContext(getApplicationContext())
 		.setAudioEncoder(audioEncoder)
 		.setVideoEncoder(videoEncoder)
-		.setVideoQuality(videoQuality);
+		.setVideoQuality(videoQuality);*/
 
 		
 	}
