@@ -261,7 +261,7 @@ public class SessionBuilder {
 		return mTimeToLive;
 	}
 
-	/** Returns a new {@link SessionBuilder} with the same configuration. */
+	/** Returns a new  with the same configuration. */
 	public SessionBuilder clone() {
 		return new SessionBuilder()
 		.setDestination(mDestination)
