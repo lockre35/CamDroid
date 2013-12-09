@@ -89,7 +89,7 @@ public class UriParser {
 
 				// H.264
 				if (param.getName().equalsIgnoreCase("h264")) {
-					VideoQuality quality = VideoQuality.parseQuality("1000-20-640-480");
+					VideoQuality quality = VideoQuality.parseQuality("1000-15-640-480");
 					builder.setVideoQuality(quality).setVideoEncoder(VIDEO_H264);
 					Log.v("UriParser","Video Quality = " + param.getValue());
 				}
