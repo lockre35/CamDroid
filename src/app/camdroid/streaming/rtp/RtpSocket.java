@@ -1,23 +1,3 @@
-/*
- * Copyright (C) 2011-2013 GUIGUI Simon, fyhertz@gmail.com
- * 
- * This file is part of Spydroid (http://code.google.com/p/spydroid-ipcamera/)
- * 
- * Spydroid is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This source code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this source code; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 package app.camdroid.streaming.rtp;
 
 import java.io.IOException;
@@ -65,7 +45,7 @@ public class RtpSocket implements Runnable {
 	public RtpSocket() throws IOException {
 
 		mCacheSize = 400;
-		mBufferCount = 300; // TODO: reajust that when the FIFO is full 
+		mBufferCount = 300; // TODO: re-adjust that when the FIFO is full 
 		mBufferIn = 0;
 		mBufferOut = 0;
 		mBuffers = new byte[mBufferCount][];
@@ -120,7 +100,7 @@ public class RtpSocket implements Runnable {
 		return mSsrc;
 	}
 
-	/** Sets the clock frquency of the stream in Hz. */
+	/** Sets the clock frequency of the stream in Hz. */
 	public void setClockFrequency(long clock) {
 		mClock = clock;
 	}
@@ -187,7 +167,7 @@ public class RtpSocket implements Runnable {
 
 	}
 
-	/** Returns an approximation of the bitrate of the RTP stream in bit per seconde. */
+	/** Returns an approximation of the bitrate of the RTP stream in bit per second. */
 	public long getBitrate() {
 		return mBitRate;
 	}
@@ -226,13 +206,11 @@ public class RtpSocket implements Runnable {
 					if ((mTimestamps[mBufferOut]-mOldTimestamp)>0) {
 						stats.push(mTimestamps[mBufferOut]-mOldTimestamp);
 						long d = stats.average()/1000000;
-						//Log.d(TAG,"delay: "+d+" d: "+(mTimestamps[mBufferOut]-mOldTimestamp)/1000000);
 						// We ensure that packets are sent at a constant and suitable rate no matter how the RtpSocket is used.
 						Thread.sleep(d);
 					}
 					delta += mTimestamps[mBufferOut]-mOldTimestamp;
 					if (delta>500000000 || delta<0) {
-						//Log.d(TAG,"permits: "+mBufferCommitted.availablePermits());
 						delta = 0;
 					}
 				}
@@ -284,7 +262,6 @@ public class RtpSocket implements Runnable {
 					initoffset = true;
 				}
 				value -= (now - start) - duration;
-				//Log.d(TAG, "sum1: "+duration/1000000+" sum2: "+(now-start)/1000000+" drift: "+((now-start)-duration)/1000000+" v: "+value/1000000);
 			}
 			if (c<40) {
 				// We ignore the first 20 measured values because they may not be accurate

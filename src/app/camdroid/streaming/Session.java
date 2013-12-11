@@ -1,23 +1,3 @@
-/*
- * Copyright (C) 2011-2013 GUIGUI Simon, fyhertz@gmail.com
- * 
- * This file is part of Spydroid (http://code.google.com/p/spydroid-ipcamera/)
- * 
- * Spydroid is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This source code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this source code; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 package app.camdroid.streaming;
 
 import java.io.IOException;
@@ -101,7 +81,7 @@ public class Session {
 		
 	/** 
 	 * The origin address of the session.
-	 * It appears in the sessionn description.
+	 * It appears in the session description.
 	 * @param origin The origin address
 	 */
 	public void setOrigin(InetAddress origin) {
@@ -139,7 +119,6 @@ public class Session {
 		synchronized (sLock) {
 			StringBuilder sessionDescription = new StringBuilder();
 			sessionDescription.append("v=0\r\n");
-			// TODO: Add IPV6 support
 			sessionDescription.append("o=- "+mTimestamp+" "+mTimestamp+" IN IP4 "+(mOrigin==null?"127.0.0.1":mOrigin.getHostAddress())+"\r\n");
 			sessionDescription.append("s=Unnamed\r\n");
 			sessionDescription.append("i=N/A\r\n");
@@ -179,7 +158,7 @@ public class Session {
 	}
 
 	/**
-	 * Returns an approximation of the bandwidth consumed by the session in bit per seconde. 
+	 * Returns an approximation of the bandwidth consumed by the session in bit per second. 
 	 */
 	public long getBitrate() {
 		long sum = 0;
@@ -235,7 +214,7 @@ public class Session {
 	 **/	
 	public void stop(int id) {
 		synchronized (sLock) {
-			// Release the MulticastLock if one was previoulsy aquired
+			// Release the MulticastLock if one was previously acquired
 			if (mLock != null) {
 				if (mLock.isHeld()) {
 					mLock.release();

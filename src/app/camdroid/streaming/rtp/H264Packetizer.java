@@ -1,23 +1,3 @@
-/*
- * Copyright (C) 2011-2013 GUIGUI Simon, fyhertz@gmail.com
- * 
- * This file is part of Spydroid (http://code.google.com/p/spydroid-ipcamera/)
- * 
- * Spydroid is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This source code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this source code; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 package app.camdroid.streaming.rtp;
 
 import java.io.IOException;
@@ -137,7 +117,6 @@ public class H264Packetizer extends AbstractPacketizer implements Runnable {
 				stats.push(duration);
 				// Computes the average duration of a NAL unit
 				delay = stats.average();
-				//Log.d(TAG,"duration: "+duration/1000000+" delay: "+delay/1000000);
 
 			}
 		} catch (IOException e) {
@@ -178,7 +157,6 @@ public class H264Packetizer extends AbstractPacketizer implements Runnable {
 		// Updates the timestamp
 		ts += delay;
 
-		//Log.d(TAG,"- Nal unit length: " + naluLength + " delay: "+delay/1000000+" type: "+type);
 
 		// Small NAL unit => Single NAL unit 
 		if (naluLength<=MAXPACKETSIZE-rtphl-2) {
@@ -188,7 +166,6 @@ public class H264Packetizer extends AbstractPacketizer implements Runnable {
 			socket.updateTimestamp(ts);
 			socket.markNextPacket();
 			super.send(naluLength+rtphl);
-			//Log.d(TAG,"----- Single NAL unit - len:"+len+" delay: "+delay);
 		}
 		// Large NAL unit => Split nal unit 
 		else {
@@ -215,7 +192,6 @@ public class H264Packetizer extends AbstractPacketizer implements Runnable {
 				super.send(len+rtphl+2);
 				// Switch start bit
 				header[1] = (byte) (header[1] & 0x7F); 
-				//Log.d(TAG,"----- FU-A unit, sum:"+sum);
 			}
 		}
 	}

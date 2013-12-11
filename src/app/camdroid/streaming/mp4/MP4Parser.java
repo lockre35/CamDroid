@@ -1,23 +1,5 @@
-/*
- * Copyright (C) 2011 GUIGUI Simon, fyhertz@gmail.com
- * 
- * This file is part of Spydroid (http://code.google.com/p/spydroid-ipcamera/)
- * 
- * Spydroid is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This source code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this source code; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
 package app.camdroid.streaming.mp4;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -173,38 +155,8 @@ class StsdBox {
 	}
 
 	private boolean findSPSandPPS() {
-		/*
-		 *  SPS and PPS parameters are stored in the avcC box
-		 *  You may find really useful information about this box 
-		 *  in the document ISO-IEC 14496-15, part 5.2.4.1.1
-		 *  The box's structure is described there
-		 *  
-		 *  aligned(8) class AVCDecoderConfigurationRecord {
-		 *		unsigned int(8) configurationVersion = 1;
-		 *		unsigned int(8) AVCProfileIndication;
-		 *		unsigned int(8) profile_compatibility;
-		 *		unsigned int(8) AVCLevelIndication;
-		 *		bit(6) reserved = ‘111111’b;
-		 *		unsigned int(2) lengthSizeMinusOne;
-		 *		bit(3) reserved = ‘111’b;
-		 *		unsigned int(5) numOfSequenceParameterSets;
-		 *		for (i=0; i< numOfSequenceParameterSets; i++) {
-		 *			unsigned int(16) sequenceParameterSetLength ;
-		 *			bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit;
-		 *		}
-		 *		unsigned int(8) numOfPictureParameterSets;
-		 *		for (i=0; i< numOfPictureParameterSets; i++) {
-		 *			unsigned int(16) pictureParameterSetLength;
-		 *			bit(8*pictureParameterSetLength) pictureParameterSetNALUnit;
-		 *		}
-		 *	}
-		 *
-		 *  
-		 *  
-		 */
 		try {
 
-			// TODO: Here we assume that numOfSequenceParameterSets = 1, numOfPictureParameterSets = 1 !
 			// Here we extract the SPS parameter
 			fis.skipBytes(7);
 			spsLength  = 0xFF&fis.readByte();

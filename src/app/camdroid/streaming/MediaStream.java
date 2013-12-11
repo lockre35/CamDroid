@@ -1,23 +1,3 @@
-/*
- * Copyright (C) 2011-2013 GUIGUI Simon, fyhertz@gmail.com
- * 
- * This file is part of Spydroid (http://code.google.com/p/spydroid-ipcamera/)
- * 
- * Spydroid is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This source code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this source code; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 package app.camdroid.streaming;
 
 import java.io.IOException;
@@ -47,7 +27,7 @@ public abstract class MediaStream implements Stream {
 	/** MediaStream uses the new MediaCodec API introduced in JB 4.2 to stream audio/video. */
 	public static final int MODE_MEDIACODEC_API = 0x01;
 
-	/** The packetizer that will read the output of the camera and send RTP packets over the networkd. */
+	/** The packetizer that will read the output of the camera and send RTP packets over the network. */
 	protected AbstractPacketizer mPacketizer = null;
 
 	protected MediaRecorder mMediaRecorder;
@@ -69,7 +49,6 @@ public abstract class MediaStream implements Stream {
 		// We determine wether or not the MediaCodec API should be used
 		try {
 			Class.forName("android.media.MediaCodec");
-			// Will be set to MODE_MEDIACODEC_API at some point...
 			sSuggestedMode = MODE_MEDIACODEC_API;
 			Log.i(TAG,"Phone supports the MediaCoded API");
 		} catch (ClassNotFoundException e) {
@@ -83,7 +62,7 @@ public abstract class MediaStream implements Stream {
 	}
 
 	/**
-	 * By default, the API that will be used to encode video or audio is choosen automatically depending
+	 * By default, the API that will be used to encode video or audio is chosen automatically depending
 	 * on the capabilities of the phone, and what have been implemented in libstreaming.
 	 * @param mode {@link MediaStream#MODE_MEDIACODEC_API} or {@link MediaStream#MODE_MEDIACODEC_API} 
 	 */
@@ -92,7 +71,7 @@ public abstract class MediaStream implements Stream {
 	}
 	
 	/** 
-	 * Sets the destination ip address of the stream.
+	 * Sets the destination IP address of the stream.
 	 * @param dest The destination address of the stream 
 	 */	
 	public void setDestinationAddress(InetAddress dest) {
