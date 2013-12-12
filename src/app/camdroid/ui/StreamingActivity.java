@@ -38,7 +38,7 @@ import app.camdroid.streaming.SessionBuilder;
  * Camdroid basically launches an HTTP server, 
  * clients can then connect to them and start/stop audio/video streams on the phone.
  */
-public class CamdroidActivity extends Activity {
+public class StreamingActivity extends Activity {
 
 	static final public String TAG = "CamdroidActivity";
 

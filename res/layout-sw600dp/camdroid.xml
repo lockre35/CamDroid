@@ -4,7 +4,7 @@
     android:id="@+id/tablet_pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CamdroidActivity">
+    tools:context=".StreamingActivity">
 
     <!--
     This title strip will display the currently visible page title, as well as the page

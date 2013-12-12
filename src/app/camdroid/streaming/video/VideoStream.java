@@ -41,7 +41,6 @@ public class VideoStream extends MediaStream {
 	protected int mVideoEncoder, mCameraId = 0;
 	protected Camera mCamera;
 	protected boolean mCameraOpenedManually = true;
-	protected boolean mFlashState = false;
 	protected boolean mSurfaceReady = false;
 	protected boolean mUnlocked = false;
 	protected boolean mPreviewStarted = false;
@@ -382,14 +381,6 @@ public class VideoStream extends MediaStream {
 				parameters.setPreviewFrameRate(mQuality.framerate);
 			}
 
-			if (mFlashState) {
-				if (parameters.getFlashMode()==null) {
-					// The phone has no flash or the choosen camera can not toggle the flash
-					throw new IllegalStateException("Can't turn the flash on !");
-				} else {
-					parameters.setFlashMode(mFlashState?Parameters.FLASH_MODE_TORCH:Parameters.FLASH_MODE_OFF);
-				}
-			}
 
 			try {
 				mCamera.setParameters(parameters);
@@ -524,10 +515,6 @@ public class VideoStream extends MediaStream {
 
 		Log.i(TAG,"Testing H264 support... Test file saved at: "+TESTFILE);
 
-		// Save flash state & set it to false so that led remains off while testing h264
-		boolean savedFlashState = mFlashState;
-		mFlashState = false;
-
 		createCamera();
 		
 		// Stops the preview if needed
@@ -604,9 +591,6 @@ public class VideoStream extends MediaStream {
 		// Delete dummy video
 		File file = new File(TESTFILE);
 		if (!file.delete()) Log.e(TAG,"Temp file could not be erased");
-
-		// Restore flash state
-		mFlashState = savedFlashState;
 
 		Log.i(TAG,"H264 Test succeded...");
 

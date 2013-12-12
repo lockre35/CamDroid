@@ -27,22 +27,40 @@
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
-        
         <activity
-            android:name="app.camdroid.ui.CamdroidActivity"
+            android:name="app.camdroid.ui.StreamingActivity"
             android:label="@string/app_name"
-            android:launchMode="singleInstance" >
+            android:screenOrientation="landscape" >
+            <intent-filter>
+                <action android:name="android.intent.action.Streaming" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="app.camdroid.ui.ActivityHandler"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape"
+             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
- 		<activity
-            android:name="app.camdroid.ui.OptionsActivity"
-            android:label="@string/options_activity_title" >
+                <activity
+            android:name="app.camdroid.ui.CameraAct"
+            android:label="Image Capture"
+            android:screenOrientation="landscape"
+             >
+            <intent-filter>
+                <action android:name="android.intent.action.CAMERA" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        
+
 
         <service android:name="app.camdroid.api.CustomHttpServer"/>
         <service android:name="app.camdroid.api.CustomRtspServer"/>

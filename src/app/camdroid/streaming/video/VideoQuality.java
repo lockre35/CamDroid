@@ -46,7 +46,7 @@ public class VideoQuality {
 	public int bitrate = 0;
 	public int resX = 0;
 	public int resY = 0;
-	public int orientation = 90;
+	public int orientation = 0;
 
 	public boolean equals(VideoQuality quality) {
 		if (quality==null) return false;

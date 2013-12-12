@@ -23,7 +23,6 @@ public class Session {
 
 	private InetAddress mOrigin;
 	private InetAddress mDestination;
-	private int mTimeToLive = 64;
 	private long mTimestamp;
 	private Context mContext = null;
 	private WifiManager.MulticastLock mLock = null;
@@ -97,14 +96,6 @@ public class Session {
 		mDestination =  destination;
 	}
 
-	/** 
-	 * Set the TTL of all packets sent during the session.
-	 * You must call this method before adding tracks to the session.
-	 * @param ttl The Time To Live
-	 */
-	public void setTimeToLive(int ttl) {
-		mTimeToLive = ttl;
-	}
 
 	/** 
 	 * Returns a Session Description that can be stored in a file or sent to a client with RTSP.

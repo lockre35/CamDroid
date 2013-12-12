@@ -22,7 +22,7 @@
             android:layout_above="@+id/adcontainer"
             android:background="@android:color/transparent"
             android:layout_alignParentTop="true"
-            tools:context=".CamdroidActivity" >
+            tools:context=".StreamingActivity" >
 
             <!--
     This title strip will display the currently visible page title, as well as the page
