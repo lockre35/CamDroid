@@ -42,8 +42,6 @@ public class SessionBuilder {
 	private int mVideoEncoder = VIDEO_H264; 
 	private int mAudioEncoder = AUDIO_AAC;
 	private int mCamera = CameraInfo.CAMERA_FACING_BACK;
-	private int mTimeToLive = 64;
-	private boolean mFlash = false;
 	private SurfaceHolder mSurfaceHolder = null;
 	private InetAddress mOrigin = null;
 	private InetAddress mDestination = null;
@@ -80,7 +78,6 @@ public class SessionBuilder {
 		session = new Session();
 		session.setOrigin(mOrigin);
 		session.setDestination(mDestination);
-		session.setTimeToLive(mTimeToLive);
 
 		switch (mAudioEncoder) {
 		case AUDIO_AAC:
@@ -162,18 +159,8 @@ public class SessionBuilder {
 		return this;
 	}
 
-	public SessionBuilder setFlashEnabled(boolean enabled) {
-		mFlash = enabled;
-		return this;
-	}
-
 	public SessionBuilder setCamera(int camera) {
 		mCamera = camera;
-		return this;
-	}
-
-	public SessionBuilder setTimeToLive(int ttl) {
-		mTimeToLive = ttl;
 		return this;
 	}
 
@@ -226,19 +213,9 @@ public class SessionBuilder {
 		return mAudioQuality;
 	}
 
-	/** Returns the flash state set with {@link #setFlashEnabled(boolean)}. */
-	public boolean getFlashState() {
-		return mFlash;
-	}
-
 	/** Returns the SurfaceHolder set with {@link #setSurfaceHolder(SurfaceHolder)}. */
 	public SurfaceHolder getSurfaceHolder() {
 		return mSurfaceHolder;
-	}
-
-	/** Returns the time to live set with {@link #setTimeToLive(int)}. */
-	public int getTimeToLive() {
-		return mTimeToLive;
 	}
 
 	/** Returns a new  with the same configuration. */
@@ -249,9 +226,7 @@ public class SessionBuilder {
 		.setSurfaceHolder(mSurfaceHolder)
 		.setVideoQuality(mVideoQuality)
 		.setVideoEncoder(mVideoEncoder)
-		.setFlashEnabled(mFlash)
 		.setCamera(mCamera)
-		.setTimeToLive(mTimeToLive)
 		.setAudioEncoder(mAudioEncoder)
 		.setAudioQuality(mAudioQuality)
 		.setContext(mContext);
