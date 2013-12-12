@@ -59,7 +59,39 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+        <activity
+            android:name="app.camdroid.ui.UploadImage"
+            android:label="Image Capture"
+            android:screenOrientation="landscape"
+             >
+            <intent-filter>
+                <action android:name="android.intent.action.ImageUpload" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="app.camdroid.ui.VideoCapture"
+            android:label="Image Capture"
+            android:screenOrientation="landscape"
+             >
+            <intent-filter>
+                <action android:name="android.intent.action.VIDEO" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="app.camdroid.ui.VideoUpload"
+            android:label="Image Capture"
+            android:screenOrientation="landscape"
+             >
+            <intent-filter>
+                <action android:name="android.intent.action.VIDEOUPLOAD" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
 
         <service android:name="app.camdroid.api.CustomHttpServer"/>

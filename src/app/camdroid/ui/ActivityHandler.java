@@ -59,12 +59,12 @@ public class ActivityHandler extends Activity {
             	startImgAct();
             }
         });
-       /* c.setOnClickListener(new OnClickListener() {
+        c.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
             	startPrefAct();
             }
-        });*/
+        });
     }
     public void startStreamAct(){
         Intent Vid = new Intent(this,StreamingActivity.class);
@@ -73,9 +73,9 @@ public class ActivityHandler extends Activity {
     public void startImgAct(){
         Intent Cam = new Intent(this,CameraAct.class);
         startActivity(Cam);
-    }/*
+    }
     public void startPrefAct(){
-        Intent Pref = new Intent(this,PrefActivity.class);
+        Intent Pref = new Intent(this,VideoCapture.class);
         startActivity(Pref);
-    }*/
+    }
 }   
