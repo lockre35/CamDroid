@@ -1,61 +1,28 @@
-/*
- * Copyright (C) 2011-2013 GUIGUI Simon, fyhertz@gmail.com
- * 
- * This file is part of Spydroid (http://code.google.com/p/spydroid-ipcamera/)
- * 
- * Spydroid is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This source code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this source code; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 package app.camdroid.ui;
 
-import java.io.IOException;
-import java.net.Socket;
 
 import app.camdroid.R;
-import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.widget.Toast;
 import app.camdroid.CamdroidApplication;
 import app.camdroid.api.CustomHttpServer;
 import app.camdroid.server.TinyHttpServer;
-import app.camdroid.streaming.Session;
-import app.camdroid.streaming.SessionBuilder;
 
 /** 
  * Camdroid basically launches an HTTP server, 
@@ -67,13 +34,10 @@ public class CamdroidActivity extends FragmentActivity {
 
 	private ViewPager mViewPager;
 	private SectionsPagerAdapter mAdapter;
-	private SurfaceView mSurfaceView;
-	private SurfaceHolder mSurfaceHolder;
 	private CamdroidApplication mApplication;
 	private CustomHttpServer mHttpServer;
 	
 
-	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -89,21 +53,6 @@ public class CamdroidActivity extends FragmentActivity {
 
 		// Starts the service of the HTTP server
 		this.startService(new Intent(this,CustomHttpServer.class));
-		//SessionBuilder builder = SessionBuilder.getInstance().clone();
-		/*Socket socket = mHttpServer.mSocket;
-		Session testSession = new Session();
-		testSession.setOrigin(socket.getLocalAddress());
-		testSession.setDestination(socket.getInetAddress());
-		try {
-			testSession.start();
-			Log.v("TestSessionStart","STARTED ");
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 
 	}
 

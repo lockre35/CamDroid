@@ -1,26 +1,3 @@
-/*
- * Copyright (C) 2011-2013 GUIGUI Simon, fyhertz@gmail.com
- * 
- * This file is part of Spydroid (http://code.google.com/p/spydroid-ipcamera/)
- * 
- * Spydroid is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This source code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this source code; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
- * Based on that: http://hc.apache.org/httpcomponents-core-ga/examples.html.
- * 
- */
-
 package app.camdroid.server;
 
 
@@ -35,7 +12,6 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.Map;
 
 import org.apache.http.ConnectionClosedException;
 import org.apache.http.HttpException;
@@ -56,14 +32,12 @@ import org.apache.http.protocol.ResponseConnControl;
 import org.apache.http.protocol.ResponseContent;
 import org.apache.http.protocol.ResponseDate;
 import org.apache.http.protocol.ResponseServer;
-import org.apache.http.protocol.UriPatternMatcher;
 
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Binder;
 import android.os.IBinder;
@@ -360,7 +334,6 @@ public class TinyHttpServer extends Service {
 				try {
 					// Set up HTTP connection
 					Socket socket = this.mServerSocket.accept();
-					Socket mSocket = socket;
 					DefaultHttpServerConnection conn = new DefaultHttpServerConnection();
 					Log.d(TAG,"Incoming connection from " + socket.getInetAddress());
 					Log.d(TAG,"Socket port " + socket.getPort());

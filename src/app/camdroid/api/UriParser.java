@@ -1,42 +1,18 @@
-/*
- * Copyright (C) 2011-2013 GUIGUI Simon, fyhertz@gmail.com
- * 
- * This file is part of Spydroid (http://code.google.com/p/spydroid-ipcamera/)
- * 
- * Spydroid is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This source code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this source code; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 package app.camdroid.api;
 
 import static app.camdroid.streaming.SessionBuilder.AUDIO_AAC;
-import static app.camdroid.streaming.SessionBuilder.AUDIO_AMRNB;
 import static app.camdroid.streaming.SessionBuilder.AUDIO_NONE;
 import static app.camdroid.streaming.SessionBuilder.VIDEO_H264;
 import static app.camdroid.streaming.SessionBuilder.VIDEO_NONE;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.URI;
-import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
-import android.hardware.Camera.CameraInfo;
 import android.util.Log;
 import app.camdroid.streaming.Session;
 import app.camdroid.streaming.SessionBuilder;

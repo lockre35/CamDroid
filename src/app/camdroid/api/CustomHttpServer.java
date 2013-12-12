@@ -1,23 +1,3 @@
-/*
- * Copyright (C) 2011-2013 GUIGUI Simon, fyhertz@gmail.com
- * 
- * This file is part of Spydroid (http://code.google.com/p/spydroid-ipcamera/)
- * 
- * Spydroid is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This source code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this source code; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 package app.camdroid.api;
 
 import java.io.IOException;
@@ -25,12 +5,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
-import java.util.WeakHashMap;
 
-import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -41,10 +18,8 @@ import org.apache.http.entity.ContentProducer;
 import org.apache.http.entity.EntityTemplate;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
-import org.apache.http.util.EntityUtils;
 
 import android.util.Log;
-import app.camdroid.CamdroidApplication;
 import app.camdroid.server.TinyHttpServer;
 import app.camdroid.streaming.Session;
 
@@ -86,17 +61,6 @@ public class CustomHttpServer extends TinyHttpServer {
 		mHttpEnabled = true;
 
 	}
-
-	private CallbackListener mListener = new CallbackListener() {
-		@Override
-		public void onError(TinyHttpServer server, Exception e, int error) {
-			if (error==ERROR_START_FAILED) {
-				CamdroidApplication.getInstance().lastCaughtException = e;
-			}
-		}
-		@Override
-		public void onMessage(TinyHttpServer server, int message) {}
-	};
 
 	@Override
 	public void onCreate() {
@@ -153,7 +117,6 @@ public class CustomHttpServer extends TinyHttpServer {
 	 **/
 	class DescriptionRequestHandler implements HttpRequestHandler {
 
-		//private final SessionInfo[] mSessionList = new SessionInfo[2];
 		
 		private SessionInfo mVideo = new SessionInfo();
 		private SessionInfo mAudio = new SessionInfo();
@@ -164,11 +127,6 @@ public class CustomHttpServer extends TinyHttpServer {
 			public String description;
 		}
 
-		public DescriptionRequestHandler() {
-			/*for (int i=0;i<2;i++) {
-				mSessionList[i] = new SessionInfo();
-			}*/
-		}
 
 		public synchronized void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException {
 			Socket socket = ((TinyHttpServer.MHttpContext)context).getSocket();

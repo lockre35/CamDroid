@@ -1,30 +1,8 @@
-/*
- * Copyright (C) 2011-2013 GUIGUI Simon, fyhertz@gmail.com
- * 
- * This file is part of Spydroid (http://code.google.com/p/spydroid-ipcamera/)
- * 
- * Spydroid is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This source code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this source code; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 package app.camdroid.streaming.video;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -35,7 +13,6 @@ import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
-import android.hardware.Camera.Size;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
@@ -87,7 +64,6 @@ public class VideoStream extends MediaStream {
 	 */
 	public VideoStream(int cameraId) throws IOException {
 		setCamera(cameraId);
-		// TODO: Remove this when encoding with the MediaCodec API is ready
 		setMode(MODE_MEDIARECORDER_API);
 		setVideoEncoder(MediaRecorder.VideoEncoder.H264);
 		mPacketizer = new H264Packetizer();
@@ -566,7 +542,6 @@ public class VideoStream extends MediaStream {
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -577,7 +552,6 @@ public class VideoStream extends MediaStream {
 		mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 		mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
 		mMediaRecorder.setMaxDuration(1000);
-		//mMediaRecorder.setMaxFileSize(Integer.MAX_VALUE);
 		mMediaRecorder.setVideoEncoder(mVideoEncoder);
 		mMediaRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
 		mMediaRecorder.setVideoSize(mQuality.resX,mQuality.resY);
