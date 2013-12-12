@@ -11,13 +11,6 @@ public interface Stream {
 	public void start() throws IllegalStateException, IOException;
 	public void stop();
 
-	/**
-	 * Sets the Time To Live of packets sent over the network.
-	 * @param ttl The time to live
-	 * @throws IOException
-	 */
-	public void setTimeToLive(int ttl) throws IOException;
-
 	/** 
 	 * Sets the destination ip address of the stream.
 	 * @param dest The destination address of the stream 

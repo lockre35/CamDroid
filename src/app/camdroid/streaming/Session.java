@@ -183,7 +183,6 @@ public class Session {
 		synchronized (sLock) {
 			Stream stream = id==0 ? mAudioStream : mVideoStream;
 			if (stream!=null && !stream.isStreaming()) {
-				stream.setTimeToLive(mTimeToLive);
 				stream.setDestinationAddress(mDestination);
 				stream.start();
 			}

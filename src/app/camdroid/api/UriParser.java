@@ -49,21 +49,6 @@ public class UriParser {
 			// Those parameters must be parsed first or else they won't necessarily be taken into account
 			for (Iterator<NameValuePair> it = params.iterator();it.hasNext();) {
 				NameValuePair param = it.next();
-
-				// UNICAST -> the client can use this to specify where he wants the stream to be sent
-				/*if (param.getName().equalsIgnoreCase("unicast")) {
-					if (param.getValue()!=null) {
-						try {
-							InetAddress addr = InetAddress.getByName(param.getValue());
-							builder.setDestination(addr);
-							Log.v("UriParser","Destination Address = " + param.getValue());
-						} catch (UnknownHostException e) {
-							throw new IllegalStateException("Invalid destination address !");
-						}
-					}					
-				}*/
-
-				// H.264
 				if (param.getName().equalsIgnoreCase("h264")) {
 					VideoQuality quality = VideoQuality.parseQuality("1000-15-640-480");
 					builder.setVideoQuality(quality).setVideoEncoder(VIDEO_H264);
