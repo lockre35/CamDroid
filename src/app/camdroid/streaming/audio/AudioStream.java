@@ -7,45 +7,48 @@ import android.util.Log;
 import app.camdroid.streaming.MediaStream;
 
 /** 
- * Don't use this class directly.
+ * Class which represents the Audio within streaming
  */
 public abstract class AudioStream  extends MediaStream {
 
 	protected int mAudioSource;
 	protected int mOutputFormat;
 	protected int mAudioEncoder;
-	protected AudioQuality mQuality = AudioQuality.DEFAULT_AUDIO_QUALITY.clone();
+	
+	//Audio Quality with the default settings
+	protected AudioQuality audQuality = AudioQuality.DEFAULT_AUDIO_QUALITY.clone();
 	
 	public AudioStream() {
 		setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
 		//setAudioSource(MediaRecorder.AudioSource.MIC);
 	}
 	
+	/** 
+	 * Returns the quality of the audio stream.  
+	 */
+	public AudioQuality getAudioQuality() {
+		return audQuality;
+	}	
+	
+	//Methods for setting certain values within the audio
 	public void setAudioSource(int audioSource) {
 		mAudioSource = audioSource;
 	}
 	
-	public void setAudioSamplingRate(int samplingRate) {
-		mQuality.samplingRate = samplingRate;
+	public void setAudiofps(int fps) {
+		audQuality.fps = fps;
 	}
 
 	public void setAudioQuality(AudioQuality quality) {
-		mQuality = quality;
+		audQuality = quality;
 	}
-	
-	/** 
-	 * Returns the quality of the stream.  
-	 */
-	public AudioQuality getAudioQuality() {
-		return mQuality;
-	}	
 	
 	/**
 	 * Sets the encoding bit rate for the stream.
-	 * @param bitRate bit rate in bit per second
+	 * @param bps bit rate in bit per second
 	 */
-	public void setAudioEncodingBitRate(int bitRate) {
-		mQuality.bitRate = bitRate;
+	public void setAudioEncodingbps(int bps) {
+		audQuality.bps = bps;
 	}
 	
 	protected void setAudioEncoder(int audioEncoder) {
@@ -59,22 +62,23 @@ public abstract class AudioStream  extends MediaStream {
 	@Override
 	protected void encodeWithMediaRecorder() throws IOException {
 		
-		// We need a local socket to forward data output by the camera to the packetizer
+		//Local socket which will send the camera output to the packetizer
 		createSockets();
 
-		Log.v(TAG,"Requested audio with "+mQuality.bitRate/1000+"kbps"+" at "+mQuality.samplingRate/1000+"kHz");
+		//Create 
+		Log.v(TAG,"Requested audio with "+audQuality.bps/1000+"kbps"+" at "+audQuality.fps/1000+"kHz");
 		
+		//Make a new media recorder and give it our desired values
 		mMediaRecorder = new MediaRecorder();
 		mMediaRecorder.setAudioSource(mAudioSource);
 		mMediaRecorder.setOutputFormat(mOutputFormat);
 		mMediaRecorder.setAudioEncoder(mAudioEncoder);
 		mMediaRecorder.setAudioChannels(1);
-		mMediaRecorder.setAudioSamplingRate(mQuality.samplingRate);
-		mMediaRecorder.setAudioEncodingBitRate(mQuality.bitRate);
+		mMediaRecorder.setAudioSamplingRate(audQuality.fps);
+		mMediaRecorder.setAudioEncodingBitRate(audQuality.bps);
 		
-		// We write the ouput of the camera in a local socket instead of a file !			
-		// This one little trick makes streaming feasible quiet simply: data from the camera
-		// can then be manipulated at the other end of the socket
+		
+		//The output of the camera will be put into our local socket
 		mMediaRecorder.setOutputFile(mSender.getFileDescriptor());
 		//mMediaRecorder.setOutputFile("/sdcard/test.aac");
 		mMediaRecorder.prepare();
@@ -89,7 +93,7 @@ public abstract class AudioStream  extends MediaStream {
 			mStreaming = true;
 		} catch (IOException e) {
 			stop();
-			throw new IOException("Something happened with the local sockets :/ Start failed !");
+			throw new IOException("Error with the local sockets");
 		}
 		
 	}
