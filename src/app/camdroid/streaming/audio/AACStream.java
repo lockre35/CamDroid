@@ -1,4 +1,6 @@
 package app.camdroid.streaming.audio;
+import app.camdroid.streaming.rtp.AACLATMPacketizer;
+import app.camdroid.streaming.rtp.MediaCodecInputStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,19 +19,16 @@ import android.media.MediaFormat;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.util.Log;
-import app.camdroid.streaming.rtp.AACLATMPacketizer;
-import app.camdroid.streaming.rtp.MediaCodecInputStream;
+
 
 /**
- * A class for streaming AAC from the microphone of an android device using RTP.
- * Call {@link #setDestinationAddress(java.net.InetAddress)} & {@link #start()} and that's it !
- * Call {@link #stop()} to stop the stream.
+ * Class uses the android device's microphone to stream AAC. Uses RTP
  */
 public class AACStream extends AudioStream {
 
 	public final static String TAG = "AACStream";
 
-	/** MPEG-4 Audio Object Types supported by ADTS. **/
+	//MPEG-4 Audio Object Types supported by ADTS
 	private static final String[] AUDIO_OBJECT_TYPES = {
 		"NULL",							  // 0
 		"AAC Main",						  // 1
@@ -38,7 +37,7 @@ public class AACStream extends AudioStream {
 		"AAC LTP (Long Term Prediction)"  // 4	
 	};
 
-	/** There are 13 supported frequencies by ADTS. **/
+	//There are 13 supported frequencies by ADTS
 	public static final int[] AUDIO_SAMPLING_RATES = {
 		96000, // 0
 		88200, // 1
@@ -58,9 +57,9 @@ public class AACStream extends AudioStream {
 		-1,   // 15
 	};
 
-	private int mActualSamplingRate;
-	private int mProfile, mSamplingRateIndex, mChannel, mConfig;
-	private SharedPreferences mSettings = null;
+	private int mActualfps;
+	private int mProfile, mfpsIndex, mChannel, mConfig;
+	private SharedPreferences devicePrefs = null;
 	private AudioRecord mAudioRecord = null;
 	private Thread mThread = null;
 
@@ -82,21 +81,28 @@ public class AACStream extends AudioStream {
 
 	@SuppressWarnings("deprecation")
 	private static boolean AACStreamingSupported() {
-		if (Integer.parseInt(android.os.Build.VERSION.SDK)<14) return false;
+		
+		if(Integer.parseInt(android.os.Build.VERSION.SDK)<14) 
+			{
+			return false;
+			}
+		
 		try {
 			MediaRecorder.OutputFormat.class.getField("AAC_ADTS");
 			return true;
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			return false;
 		}
 	}
 
 	/**
-	 * Some data (the actual sampling rate used by the phone and the AAC profile) needs to be stored once {@link #generateSessionDescription()} is called.
+	 * Save data which will be stored in our preferences
 	 * @param prefs The SharedPreferences that will be used to store the sampling rate 
 	 */
 	public void setPreferences(SharedPreferences prefs) {
-		mSettings = prefs;
+		devicePrefs = prefs;
 	}
 
 	public void start() throws IllegalStateException, IOException {
@@ -107,7 +113,7 @@ public class AACStream extends AudioStream {
 	@Override
 	protected void encodeWithMediaRecorder() throws IOException {
 		testADTS();
-		((AACLATMPacketizer)mPacketizer).setSamplingRate(mActualSamplingRate);
+		((AACLATMPacketizer)mPacketizer).setSamplingRate(mActualfps);
 		super.encodeWithMediaRecorder();
 	}
 
@@ -115,27 +121,30 @@ public class AACStream extends AudioStream {
 	@SuppressLint({ "InlinedApi", "NewApi" })
 	protected void encodeWithMediaCodec() throws IOException {
 		
-		// Checks if the user has supplied an exotic sampling rate
+		//We see if the user is attempting a frequency we do not support 
 		int i=0;
-		for (;i<AUDIO_SAMPLING_RATES.length;i++) {
-			if (AUDIO_SAMPLING_RATES[i] == mQuality.samplingRate) {
+		for (i=0 ;i<AUDIO_SAMPLING_RATES.length;i++) {
+			if (AUDIO_SAMPLING_RATES[i] == audQuality.fps) {
 				break;
 			}
 		}
-		// If he did, we force a reasonable one: 24 kHz
-		if (i>12) mQuality.samplingRate = 24000;
+		//Use a value we do support 
+		if (i>12)
+		{
+			audQuality.fps = 24000;
+		}
 		
-		final int bufferSize = AudioRecord.getMinBufferSize(mQuality.samplingRate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)*2;
+		final int bufferSize = AudioRecord.getMinBufferSize(audQuality.fps, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)*2;
 		
-		((AACLATMPacketizer)mPacketizer).setSamplingRate(mQuality.samplingRate);
+		((AACLATMPacketizer)mPacketizer).setSamplingRate(audQuality.fps);
 		
-		mAudioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, mQuality.samplingRate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize);
+		mAudioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, audQuality.fps, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize);
 		mMediaCodec = MediaCodec.createEncoderByType("audio/mp4a-latm");
 		MediaFormat format = new MediaFormat();
 		format.setString(MediaFormat.KEY_MIME, "audio/mp4a-latm");
-		format.setInteger(MediaFormat.KEY_BIT_RATE, mQuality.bitRate);
+		format.setInteger(MediaFormat.KEY_BIT_RATE, audQuality.bps);
 		format.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
-		format.setInteger(MediaFormat.KEY_SAMPLE_RATE, mQuality.samplingRate);
+		format.setInteger(MediaFormat.KEY_SAMPLE_RATE, audQuality.fps);
 		format.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
 		format.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, bufferSize);
 		mMediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
@@ -217,23 +226,23 @@ public class AACStream extends AudioStream {
 			// TODO: streamType always 5 ? profile-level-id always 15 ?
 
 			return "m=audio "+String.valueOf(getDestinationPorts()[0])+" RTP/AVP 96\r\n" +
-			"a=rtpmap:96 mpeg4-generic/"+mActualSamplingRate+"\r\n"+
+			"a=rtpmap:96 mpeg4-generic/"+mActualfps+"\r\n"+
 			"a=fmtp:96 streamtype=5; profile-level-id=15; mode=AAC-hbr; config="+Integer.toHexString(mConfig)+"; SizeLength=13; IndexLength=3; IndexDeltaLength=3;\r\n";
 
 		} else {
 			
 			for (int i=0;i<AUDIO_SAMPLING_RATES.length;i++) {
-				if (AUDIO_SAMPLING_RATES[i] == mQuality.samplingRate) {
-					mSamplingRateIndex = i;
+				if (AUDIO_SAMPLING_RATES[i] == audQuality.fps) {
+					mfpsIndex = i;
 					break;
 				}
 			}
 			mProfile = 2; // AAC LC
 			mChannel = 1;
-			mConfig = mProfile<<11 | mSamplingRateIndex<<7 | mChannel<<3;
+			mConfig = mProfile<<11 | mfpsIndex<<7 | mChannel<<3;
 
 			return "m=audio "+String.valueOf(getDestinationPorts()[0])+" RTP/AVP 96\r\n" +
-			"a=rtpmap:96 mpeg4-generic/"+mQuality.samplingRate+"\r\n"+
+			"a=rtpmap:96 mpeg4-generic/"+audQuality.fps+"\r\n"+
 			"a=fmtp:96 streamtype=5; profile-level-id=15; mode=AAC-hbr; config="+Integer.toHexString(mConfig)+"; SizeLength=13; IndexLength=3; IndexDeltaLength=3;\r\n";			
 
 		}
@@ -243,7 +252,7 @@ public class AACStream extends AudioStream {
 	/** 
 	 * Records a short sample of AAC ADTS from the microphone to find out what the sampling rate really is
 	 * On some phone indeed, no error will be reported if the sampling rate used differs from the 
-	 * one selected with setAudioSamplingRate 
+	 * one selected with setAudiofps 
 	 * @throws IOException 
 	 * @throws IllegalStateException
 	 */
@@ -262,20 +271,22 @@ public class AACStream extends AudioStream {
 		// Checks if the user has supplied an exotic sampling rate
 		int i=0;
 		for (;i<AUDIO_SAMPLING_RATES.length;i++) {
-			if (AUDIO_SAMPLING_RATES[i] == mQuality.samplingRate) {
+			if (AUDIO_SAMPLING_RATES[i] == audQuality.fps) {
 				break;
 			}
 		}
 		// If he did, we force a reasonable one: 16 kHz
 		if (i>12) {
-			Log.e(TAG,"Not a valid sampling rate: "+mQuality.samplingRate);
-			mQuality.samplingRate = 16000;
+			Log.e(TAG,"Not a valid sampling rate: "+audQuality.fps);
+			audQuality.fps = 16000;
 		}
 		
-		if (mSettings!=null) {
-			if (mSettings.contains("aac-"+mQuality.samplingRate)) {
-				String[] s = mSettings.getString("aac-"+mQuality.samplingRate, "").split(",");
-				mActualSamplingRate = Integer.valueOf(s[0]);
+		if (devicePrefs!=null)
+		{
+			if (devicePrefs.contains("aac-"+audQuality.fps)) 
+			{
+				String[] s = devicePrefs.getString("aac-"+audQuality.fps, "").split(",");
+				mActualfps = Integer.valueOf(s[0]);
 				mConfig = Integer.valueOf(s[1]);
 				mChannel = Integer.valueOf(s[2]);
 				return;
@@ -298,8 +309,8 @@ public class AACStream extends AudioStream {
 		mMediaRecorder.setOutputFormat(mOutputFormat);
 		mMediaRecorder.setAudioEncoder(mAudioEncoder);
 		mMediaRecorder.setAudioChannels(1);
-		mMediaRecorder.setAudioSamplingRate(mQuality.samplingRate);
-		mMediaRecorder.setAudioEncodingBitRate(mQuality.bitRate);
+		mMediaRecorder.setAudioSamplingRate(audQuality.fps);
+		mMediaRecorder.setAudioEncodingBitRate(audQuality.bps);
 		mMediaRecorder.setOutputFile(TESTFILE);
 		mMediaRecorder.setMaxDuration(1000);
 		mMediaRecorder.prepare();
@@ -328,26 +339,27 @@ public class AACStream extends AudioStream {
 
 		raf.read(buffer,1,5);
 
-		mSamplingRateIndex = (buffer[1]&0x3C)>>2 ;
+		mfpsIndex = (buffer[1]&0x3C)>>2 ;
 		mProfile = ( (buffer[1]&0xC0) >> 6 ) + 1 ;
 		mChannel = (buffer[1]&0x01) << 2 | (buffer[2]&0xC0) >> 6 ;
-		mActualSamplingRate = AUDIO_SAMPLING_RATES[mSamplingRateIndex];
+		mActualfps = AUDIO_SAMPLING_RATES[mfpsIndex];
 
 		// 5 bits for the object type / 4 bits for the sampling rate / 4 bits for the channel / padding
-		mConfig = mProfile<<11 | mSamplingRateIndex<<7 | mChannel<<3;
+		mConfig = mProfile<<11 | mfpsIndex<<7 | mChannel<<3;
 
 		Log.i(TAG,"MPEG VERSION: " + ( (buffer[0]&0x08) >> 3 ) );
 		Log.i(TAG,"PROTECTION: " + (buffer[0]&0x01) );
 		Log.i(TAG,"PROFILE: " + AUDIO_OBJECT_TYPES[ mProfile ] );
-		Log.i(TAG,"SAMPLING FREQUENCY: " + mActualSamplingRate );
+		Log.i(TAG,"SAMPLING FREQUENCY: " + mActualfps );
 		Log.i(TAG,"CHANNEL: " + mChannel );
 
 		raf.close();
 
-		if (mSettings!=null) {
-			Editor editor = mSettings.edit();
-			editor.putString("aac-"+mQuality.samplingRate, mActualSamplingRate+","+mConfig+","+mChannel);
-			editor.commit();
+		if (devicePrefs!=null) 
+		{
+			Editor edit = devicePrefs.edit();
+			edit.putString("aac-"+audQuality.fps, mActualfps+","+mConfig+","+mChannel);
+			edit.commit();
 		}
 
 		if (!file.delete()) Log.e(TAG,"Temp file could not be erased");
