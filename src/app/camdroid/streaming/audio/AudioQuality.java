@@ -1,58 +1,80 @@
 package app.camdroid.streaming.audio;
-
+//comment
 /**
- * A class that represents the quality of an audio stream. 
+ * This class deals with the quality of the audio streamed
  */
 public class AudioQuality {
 
-	/** Default audio stream quality. */
+	//Default value for the audio stream quality
 	public final static AudioQuality DEFAULT_AUDIO_QUALITY = new AudioQuality(8000,32000);
 
-	/**	Represents a quality for a video stream. */ 
+	//Constructors for objects which will represent the audio stream quality
 	public AudioQuality() {}
 
 	/**
-	 * Represents a quality for an audio stream.
-	 * @param samplingRate The sampling rate
-	 * @param bitRate The bitrate in bit per seconds
+	 * Constructor with given parameters
+	 * @param fps The sampling rate
+	 * @param bps The bit rate in bit per seconds
 	 */
-	public AudioQuality(int samplingRate, int bitRate) {
-		this.samplingRate = samplingRate;
-		this.bitRate = bitRate;
+	public AudioQuality(int fps, int bps) {
+		this.fps = fps;
+		this.bps = bps;
 	}	
 
-	public int samplingRate = 0;
-	public int bitRate = 0;
-
-	public boolean equals(AudioQuality quality) {
-		if (quality==null) return false;
-		return (quality.samplingRate == this.samplingRate 				&
-				quality.bitRate == this.bitRate);
-	}
-
+	//Initialize our rates
+	public int fps = 0;
+	public int bps = 0;
+	
+	//Creates a new AudioQuality with the same sampling rate and bit rate
 	public AudioQuality clone() {
-		return new AudioQuality(samplingRate, bitRate);
+		AudioQuality aq = new AudioQuality(fps, bps);
+		return aq;
 	}
-
+	
+	//Method for testing equality of bit rates and sampling rates
+	public boolean equals(AudioQuality quality) {
+		if((quality!= null) && ((quality.bps == this.bps) & (quality.fps == quality.fps)))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	//Method which returns an Audio Quality by parsing string
 	public static AudioQuality parseQuality(String str) {
-		AudioQuality quality = new AudioQuality(0,0);
+		AudioQuality newAudQuality = new AudioQuality(0,0);
 		if (str != null) {
 			String[] config = str.split("-");
+			//Avoid any out of bounds errors
+			//Might be able to get rid of try catch block
 			try {
-				quality.bitRate = Integer.parseInt(config[0])*1000; // conversion to bit/s
-				quality.samplingRate = Integer.parseInt(config[1]);
+				newAudQuality.bps = Integer.parseInt(config[0]);
+				newAudQuality.bps = newAudQuality.bps*1000; // Convert our parseInt value to bits per second
+				newAudQuality.fps = Integer.parseInt(config[1]);
 			}
-			catch (IndexOutOfBoundsException ignore) {}
+			catch (IndexOutOfBoundsException e) {}
 		}
-		return quality;
+		return newAudQuality;
 	}
 
-	public static AudioQuality merge(AudioQuality audioQuality, AudioQuality withAudioQuality) {
-		if (withAudioQuality != null && audioQuality != null) {
-			if (audioQuality.samplingRate==0) audioQuality.samplingRate = withAudioQuality.samplingRate;
-			if (audioQuality.bitRate==0) audioQuality.bitRate = withAudioQuality.bitRate;
+	public static AudioQuality merge(AudioQuality audioQuality1, AudioQuality audioQuality2) {
+		
+		if (audioQuality2 != null && audioQuality1 != null) 
+		{
+			if (audioQuality1.fps==0)
+				{
+				audioQuality1.fps = audioQuality2.fps;
+				}
+			
+			if (audioQuality1.bps==0)
+				{
+				audioQuality1.bps = audioQuality2.bps;
+				}
 		}
-		return audioQuality;
+		return audioQuality1;
 	}
 
 }
